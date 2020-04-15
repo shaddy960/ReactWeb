@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import { Media } from 'reactstrap';
 import {
     Card, CardImg, CardImgOverlay, CardText, CardBody,
     CardTitle
 } from 'reactstrap';
+import Dishdetail from './DishdetailComponent';
 
 class Menu extends Component {
 
@@ -11,12 +11,13 @@ class Menu extends Component {
         super(props);
 
         this.state = {
-            selectedDish: null
+            selectedDish: null,
+            comments:null
         }
     }
 
     onDishSelect(dish) {
-        this.setState({ selectedDish: dish });
+        this.setState({ selectedDish: dish, comments: dish.comments});
     }
 
     renderDish(dish) {
@@ -56,11 +57,7 @@ class Menu extends Component {
                 <div className="row">
                     {menu}
                 </div>
-                <div className="row">
-                    <div className="col-12 m-1">
-                        {this.renderDish(this.state.selectedDish)}
-                    </div>
-                </div>
+                <Dishdetail dish={this.state.selectedDish} comments={this.state.comments} />                    
             </div>
         );
     }
