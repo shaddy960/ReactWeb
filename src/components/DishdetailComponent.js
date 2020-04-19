@@ -34,10 +34,10 @@ function RenderDish({ dish }) {
 
 }
 
-function RenderComments(comments) {
+function RenderComments({comments, addComment, dishId}) {
     if (comments != null) {
         const cont = Object.values(comments);
-        var comm = cont[0].map((comment) => {
+        var comm = comments.map((comment) => {
             return (
                 <ul key={comment.id} className="list-unstyled">
                     <li>{comment.comment}</li>
@@ -49,7 +49,7 @@ function RenderComments(comments) {
             <div className="col-12 col-md-5 m-1">
                 <h4>Comments</h4>
                 {comm}
-                <CommentForm com={comm} />
+                <CommentForm dishId={dishId} addComment={addComment} />
             </div>
         );
     } else {
@@ -72,7 +72,7 @@ class CommentForm extends Component {
             isModalOpen: false
         };
         this.toggleModal = this.toggleModal.bind(this);
-        this.addComment = this.addComment.bind(this);
+        this.handleComment = this.handleComment.bind(this);
     }
 
     toggleModal() {
@@ -81,10 +81,9 @@ class CommentForm extends Component {
         });
     }
 
-    addComment(values) {
+    handleComment(values) {
         this.toggleModal();
-        console.log('Current State is: ' + JSON.stringify(values));
-        alert('Current State is: ' + JSON.stringify(values));
+        this.props.addComment(this.props.dishId, values.rating, values.author, values.comment);
     }
 
     render() {
@@ -98,7 +97,7 @@ class CommentForm extends Component {
                 <Modal isOpen={this.state.isModalOpen} toggle={this.toggleModal}>
                     <ModalHeader toggle={this.toggleModal}>Submit Comment</ModalHeader>
                     <ModalBody>
-                        <LocalForm onSubmit={(values) => this.addComment(values)}>
+                        <LocalForm onSubmit={(values) => this.handleComment(values)}>
                             <Row className="form-group">
                                 <Label htmlFor="yourname" md={12}>Rating</Label>
                                 <Col md={{ size: 12 }}>
@@ -115,7 +114,7 @@ class CommentForm extends Component {
                             <Row className="form-group">
                                 <Label htmlFor="yourname" md={12}>Your Name</Label>
                                 <Col md={12}>
-                                    <Control.text model=".yourname" id="yourname" name="yourname"
+                                    <Control.text model=".author" id="author" name="author"
                                         placeholder="Your Name"
                                         className="form-control"
                                         validators={{
@@ -124,7 +123,7 @@ class CommentForm extends Component {
                                     />
                                     <Errors
                                         className="text-danger"
-                                        model=".yourname"
+                                        model=".author"
                                         show="touched"
                                         messages={{
                                             required: 'Required',
@@ -135,17 +134,17 @@ class CommentForm extends Component {
                                 </Col>
                             </Row>
                             <Row className="form-group">
-                                <Label htmlFor="message" md={12}>Your Comment</Label>
+                                <Label htmlFor="comment" md={12}>Your Comment</Label>
                                 <Col md={12}>
-                                    <Control.textarea model=".message" id="message" name="message"
+                                    <Control.textarea model=".comment" id="comment" name="comment"
                                         rows="6"
                                         className="form-control" />
                                 </Col>
                             </Row>
                             <Row className="form-group">
-                                <Col md={{ size: 6}}>
+                                <Col md={{ size: 6 }}>
                                     <Button type="submit" color="primary">
-                                        Send Feedback
+                                        Submit
                                     </Button>
                                 </Col>
                             </Row>
@@ -175,7 +174,10 @@ const Dishdetail = (props) => {
                 <div className="row">
 
                     <RenderDish dish={props.dish} />
-                    <RenderComments comments={props.comments} />
+                    <RenderComments comments={props.comments}
+                        addComment={props.addComment}
+                        dishId={props.dish.id}
+                    />
 
                 </div>
             </div>
