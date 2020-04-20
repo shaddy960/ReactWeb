@@ -1,34 +1,36 @@
 import React from 'react';
 import { Breadcrumb, BreadcrumbItem, Card, CardBody, CardHeader, Media } from 'reactstrap';
 import { Link } from 'react-router-dom';
+import { baseUrl } from '../shared/baseUrl';
+import { Fade, Stagger } from 'react-animation-components';
 
 
-function RenderLeader({lead}){
+function RenderLeader({ lead }) {
     return (
-        <div key={lead.id} className="col-12 mt-5">
-        <Media tag="li">
-          <Media left middle>
-              <Media object src={lead.image} alt={lead.name} />
-          </Media>
-          <Media body className="ml-5">
-            <Media heading>{lead.name}</Media>
-            <p>{lead.designation}</p>
-            <p>{lead.description}</p>
-          </Media>
-        </Media>
-      </div>
-   );
+            <div key={lead.id} className="col-12 mt-5">
+                
+                <Media tag="li">
+                
+                    <Media left middle>
+                        <Media object src={baseUrl + lead.image} alt={lead.name} />
+                    </Media>
+                    <Fade in>
+                    <Media body className="ml-5">
+                        <Media heading>{lead.name}</Media>
+                        <p>{lead.designation}</p>
+                        <p>{lead.description}</p>
+                    </Media>
+                    </Fade>
+                </Media>
+                
+            </div>
+    );
 }
 
 function About(props) {
 
-    const leaders = props.leaders.map((leader) => {
-        return (
-            <RenderLeader lead={leader} />
-        );
-    });
 
-    return(
+    return (
         <div className="container">
             <div className="row">
                 <Breadcrumb>
@@ -38,7 +40,7 @@ function About(props) {
                 <div className="col-12">
                     <h3>About Us</h3>
                     <hr />
-                </div>                
+                </div>
             </div>
             <div className="row row-content">
                 <div className="col-12 col-md-6">
@@ -82,11 +84,19 @@ function About(props) {
                 <div className="col-12">
                     <h2>Corporate Leadership</h2>
                 </div>
+
                 <div className="col-12">
                     <Media list>
-                        {leaders}
+                        <Stagger in>
+                        {props.leaders.map((leader) => {
+                            return (
+                            <RenderLeader lead={leader} />
+                            );
+                        })}
+                        </Stagger>
                     </Media>
                 </div>
+
             </div>
         </div>
     );
